@@ -34,7 +34,7 @@ begin
     x_opt, obj_opt, admm_iter = admm(A, b, lambda, rho, N_high_acc, 0)
 
     # Max iterations for ISTA/FISTA
-    N = 20000
+    N = 100000
     t_ista = @elapsed x_ista, obj_ista, ista_iter, ista_total_iters = ista(A, b, lambda, N, obj_opt)
     t_fista = @elapsed x_fista, obj_fista, fista_iter, fista_total_iters = fista(A, b, lambda, N, obj_opt)
 
@@ -80,6 +80,7 @@ begin
     println("ADMM Time: ", t_admm)
     println("OSQP Time: ", t_osqp)
     println("FISTA Time: ", t_fista)
+    println("ISTA Time: ", t_ista)
 
     println("OSQP Distance to Optimal: ", abs(obj_opt - obj_osqp))
     println("High Acc Residual: ", get_residual(A, b, lambda, x_opt))
@@ -87,18 +88,17 @@ begin
     ista_iters_array = LinRange(0, ista_total_iters, n_ista_samples)
     fista_iters_array = LinRange(0, fista_total_iters, n_fista_samples)
 
-    figure()
+    figure(dpi=200)
     plot(ista_iters_array, ista_res, label="ISTA")
     plot(fista_iters_array, fista_res, label="FISTA")
-    # plot(admm_res', label="ADMM")
     legend()
     yscale("log")
-    title("Distance to Optimal")
+    title("ISTA/FISTA Distance to Optimal")
     xlabel("Iteration")
     ylabel(L"$f(x)-f^*(x)$")
     grid(true)
 
-    figure()
+    figure(dpi=200)
     for i = 1 : n_rho
         plot(admm_res[i,1:Int64(admm_total_iters[i])], label=L"$\rho=$"*string(rho[i]))
     end

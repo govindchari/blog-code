@@ -116,8 +116,8 @@ function jump(A, b, lambda)
     m,n = size(A)
 
     model = Model(OSQP.Optimizer)
-    set_optimizer_attribute(model, "eps_rel", 1e-9)
-    set_optimizer_attribute(model, "eps_abs", 1e-9)
+    set_optimizer_attribute(model, "eps_rel", 5e-10)
+    set_optimizer_attribute(model, "eps_abs", 5e-10)
 
     @variable(model, x[1:n])
     @variable(model, t[1:1])
